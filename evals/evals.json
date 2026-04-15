@@ -32,12 +32,12 @@
     {
       "id": 3,
       "prompt": "Can you check if my workflows have any security problems? I have .github/workflows/clean.yml",
-      "expected_output": "sisakulint reports zero or minimal findings. The skill correctly identifies the workflow as already hardened and does not make unnecessary changes.",
+      "expected_output": "sisakulint reports zero findings. The workflow is already fully hardened including step-level timeouts.",
       "files": ["evals/files/clean-workflow.yml"],
       "assertions": [
         "sisakulint was executed",
-        "No unnecessary modifications were made to the workflow",
-        "The output correctly reports the workflow as clean or with minimal issues"
+        "sisakulint reports zero findings",
+        "No modifications were made to the workflow"
       ]
     },
     {
