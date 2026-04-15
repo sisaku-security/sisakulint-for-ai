@@ -1,0 +1,25 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed",
+      "passed": true,
+      "evidence": "scan.txt contains sisakulint output with exit code 0 and 0 findings across all rule categories."
+    },
+    {
+      "text": "sisakulint reports zero findings",
+      "passed": true,
+      "evidence": "scan.txt shows 0 errors for all rule categories. No missing-timeout-minutes, no commit-sha, no artipacked, no code-injection findings."
+    },
+    {
+      "text": "No modifications were made to the workflow",
+      "passed": true,
+      "evidence": "Output clean.yml is unchanged from the input fixture. No fixes were applied because sisakulint reported zero findings."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}

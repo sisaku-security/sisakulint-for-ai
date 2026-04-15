@@ -1,0 +1,13 @@
+=== sisakulint scan of .github/workflows/clean.yml ===
+Date: Wed Apr 15 16:24:38 JST 2026
+
+--- sisakulint output ---
+Exit code: 0
+
+--- sisakulint -fix on ---
+Exit code: 0
+
+--- Final validation ---
+Exit code: 0
+
+Result: 0 findings. Workflow is already hardened. No changes needed.

@@ -1,0 +1,40 @@
+{
+  "iteration": 3,
+  "date": "2026-04-15",
+  "changes_from_iteration_2": [
+    "Fixed step-level timeout-minutes gotcha: not FP, intentional defense-in-depth",
+    "Updated clean-workflow.yml fixture with step-level timeouts",
+    "Updated eval-3 assertions to expect zero findings"
+  ],
+  "eval_results": {
+    "eval-ci-hardening": {
+      "with_skill": { "passed": 6, "total": 6, "pass_rate": 1.0 },
+      "note": "Unchanged from iteration 1"
+    },
+    "eval-supply-chain": {
+      "with_skill": { "passed": 6, "total": 6, "pass_rate": 1.0 },
+      "note": "Unchanged from iteration 2"
+    },
+    "eval-clean-workflow": {
+      "with_skill": { "passed": 3, "total": 3, "pass_rate": 1.0 },
+      "iteration_2": { "passed": 2, "total": 3, "pass_rate": 0.67 },
+      "improvement": "+33%"
+    },
+    "eval-ai-agent": {
+      "with_skill": { "passed": 5, "total": 5, "pass_rate": 1.0 },
+      "note": "Unchanged from iteration 2"
+    }
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 1.0, "per_eval": [1.0, 1.0, 1.0, 1.0] },
+      "total_passed": 20,
+      "total_assertions": 20
+    },
+    "progression": {
+      "iteration_1": { "mean": 0.65, "total": "14/20" },
+      "iteration_2": { "mean": 0.92, "total": "19/20" },
+      "iteration_3": { "mean": 1.0, "total": "20/20" }
+    }
+  }
+}
