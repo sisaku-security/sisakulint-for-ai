@@ -41,11 +41,11 @@ For remote repos: `sisakulint -remote owner/repo` to scan, then clone locally fo
 Replace direct expression usage in `run:` with an intermediate env var:
 
 ```yaml
-# Before (vulnerable)
+# Before (vulnerable — expression injected directly into shell)
 - run: echo "Hello ${{ github.event.issue.title }}"
 
-# After (safe)
-- run: echo "Hello ${TITLE}"
+# After (safe — expression bound to env var, quoted in shell)
+- run: echo "Hello $TITLE"
   env:
     TITLE: ${{ github.event.issue.title }}
 ```
