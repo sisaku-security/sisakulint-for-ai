@@ -1,0 +1,68 @@
+{
+  "skill_name": "sisakulint",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a CI workflow at .github/workflows/ci.yml that I want to harden. Can you scan it and fix any security issues?",
+      "expected_output": "Findings for unpinned actions, expression injection, missing persist-credentials, and missing timeout-minutes. All auto-fixable issues resolved, manual fixes applied for expression injection and persist-credentials. Final re-run shows zero findings.",
+      "files": ["evals/files/vulnerable-ci.yml"],
+      "assertions": [
+        "sisakulint was executed at least once",
+        "All action refs are pinned to full 40-character commit SHAs after fix",
+        "Expression injection in run: step is remediated using env var pattern",
+        "persist-credentials: false is added to actions/checkout steps",
+        "timeout-minutes is set on all jobs",
+        "A final validation run of sisakulint shows zero findings"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review .github/workflows/release.yml for supply chain risks and fix everything you find.",
+      "expected_output": "Identifies untrusted checkout with pull_request_target, unpinned images, secret exposure issues. Applies appropriate fixes including changing trigger or isolating checkout.",
+      "files": ["evals/files/vulnerable-release.yml"],
+      "assertions": [
+        "sisakulint was executed to identify issues",
+        "untrusted-checkout finding is identified and remediated",
+        "Secrets exposure is reduced to minimum required scope",
+        "Container images are pinned to specific versions or digests",
+        "A dependabot.yml file is created or recommended for github-actions ecosystem",
+        "Final sisakulint run confirms all findings resolved"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you check if my workflows have any security problems? I have .github/workflows/clean.yml",
+      "expected_output": "sisakulint reports zero or minimal findings. The skill correctly identifies the workflow as already hardened and does not make unnecessary changes.",
+      "files": ["evals/files/clean-workflow.yml"],
+      "assertions": [
+        "sisakulint was executed",
+        "No unnecessary modifications were made to the workflow",
+        "The output correctly reports the workflow as clean or with minimal issues"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我々のリポジトリでAIエージェントを使ったワークフローがあるんだけど、セキュリティ的に大丈夫か見てほしい。.github/workflows/ai-agent.yml にある。",
+      "expected_output": "AI agent security rules are triggered: unrestricted trigger, excessive tools, prompt injection. Remediation advice is provided for each.",
+      "files": ["evals/files/ai-agent-workflow.yml"],
+      "assertions": [
+        "sisakulint identifies AI agent security issues",
+        "Unrestricted trigger issue is flagged (any user can trigger AI execution)",
+        "Excessive tool grants are identified",
+        "Prompt injection risk from untrusted input interpolation is flagged",
+        "Specific remediation steps are provided for each AI security finding"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "hey can you scan github.com/actions/starter-workflows for workflow security issues",
+      "expected_output": "Uses sisakulint -remote to scan the remote repository and reports findings without requiring local clone for initial scan.",
+      "files": [],
+      "assertions": [
+        "sisakulint -remote is used for remote repository scanning",
+        "Findings are reported with rule IDs and severity levels",
+        "The output distinguishes between auto-fixable and manual-fix-required issues"
+      ]
+    }
+  ]
+}
