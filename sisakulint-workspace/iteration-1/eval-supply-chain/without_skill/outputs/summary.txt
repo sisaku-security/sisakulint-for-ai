@@ -1,0 +1,90 @@
+Supply Chain Risk Review: .github/workflows/release.yml
+=========================================================
+Review Date: 2026-04-15
+Reviewer: Claude (without skill, general knowledge only)
+
+FINDINGS AND FIXES
+------------------
+
+CRITICAL: Pwn Request via pull_request_target + untrusted checkout
+  Severity: Critical
+  Line(s): 4-5, 14-15
+  Description: The workflow triggers on pull_request_target (which runs with
+    write access to the base repository's secrets) and then checks out the PR
+    head SHA using `ref: ${{ github.event.pull_request.head.sha }}`. This
+    allows any external contributor to open a PR and have their arbitrary code
+    execute with access to all repository secrets. This is a well-documented
+    attack pattern known as a "pwn request".
+  Fix: Changed the trigger to `push: tags: ['v*']`. Release workflows should
+    only run on trusted code (tagged commits from maintainers), not on PRs
+    from forks. The unsafe `ref:` override was also removed.
+
+HIGH: Overly broad permissions (write-all)
+  Severity: High
+  Line: 7
+  Description: `permissions: write-all` grants all GitHub Actions permissions
+    (contents, packages, issues, pull-requests, deployments, etc.) to every
+    step in the workflow. If any step is compromised -- e.g. a malicious action
+    or script injection -- the attacker gains full write access to the repository
+    and all associated resources.
+  Fix: Replaced with least-privilege permissions:
+    - `contents: read` (needed for checkout)
+    - `packages: write` (needed to push to the container registry)
+
+HIGH: Mutable action references (floating tags)
+  Severity: High
+  Lines: 13, 17, 28
+  Description: Actions referenced by mutable tags (@v4, @v5) can be silently
+    updated by the action publisher. If the upstream repository is compromised,
+    or if the tag is moved to a malicious commit, the workflow will execute
+    attacker-controlled code. This is a standard supply chain attack vector.
+  Fix: Pinned all three actions to their full immutable commit SHA:
+    - actions/checkout@v4   -> @11bd71901bbe5b1630ceea73d27597364c9af683 (v4.2.2)
+    - actions/setup-node@v4 -> @39370e3970a6d050c480ffad4ff0ed4d3fdee5af (v4.1.0)
+    - docker/build-push-action@v5 -> @4f58ea79222b3b9dc2c8bbdd6debcef730109a75 (v6.9.0)
+
+MEDIUM: Mutable runner image (ubuntu-latest)
+  Severity: Medium
+  Line: 11
+  Description: `ubuntu-latest` resolves to whatever Ubuntu version GitHub
+    currently maps to that alias. Changes to the underlying image can introduce
+    different tooling versions, deprecated packages, or -- in an extreme scenario
+    -- a compromised base image, making builds non-reproducible.
+  Fix: Pinned to `ubuntu-24.04` for a stable, known runner environment.
+
+MEDIUM: Excessive secrets exposed in environment
+  Severity: Medium
+  Lines: 35-41
+  Description: Six secrets (NPM_TOKEN, SLACK_WEBHOOK, AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY, DATABASE_URL, STRIPE_SECRET_KEY) are all injected
+    into the deploy step. DATABASE_URL (a database connection string with
+    credentials) and STRIPE_SECRET_KEY (a payment processor API key) have no
+    place in a deployment CI script. If the deploy script is compromised, the
+    blast radius includes production database and payment data.
+  Fix: Removed DATABASE_URL and STRIPE_SECRET_KEY from the workflow. These
+    credentials should be fetched at application runtime from a secrets manager
+    (e.g., AWS Secrets Manager, HashiCorp Vault) and must never be passed
+    through CI environment variables.
+
+LOW: Image always tagged as 'latest'
+  Severity: Low
+  Line: 31
+  Description: Publishing every build to `myorg/myapp:latest` means downstream
+    consumers always pull an unknown version, and there is no stable image to
+    roll back to when a bad release is published. It also makes it harder to
+    audit which image version is running in production.
+  Fix: Changed the tag to `myorg/myapp:${{ github.ref_name }}` so each
+    release tag (e.g. v1.2.3) produces a uniquely named, immutable image.
+
+SUMMARY TABLE
+-------------
+| # | Issue                                    | Severity | Fixed |
+|---|------------------------------------------|----------|-------|
+| 1 | pwn request: pull_request_target + SHA   | Critical | Yes   |
+| 2 | permissions: write-all                   | High     | Yes   |
+| 3 | Mutable action tags (3 actions)          | High     | Yes   |
+| 4 | Mutable runner (ubuntu-latest)           | Medium   | Yes   |
+| 5 | Excessive secrets in environment         | Medium   | Yes   |
+| 6 | Docker image always tagged :latest       | Low      | Yes   |
+
+All 6 issues have been remediated in the fixed release.yml.

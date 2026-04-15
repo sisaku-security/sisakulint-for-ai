@@ -1,0 +1,75 @@
+CI Workflow Security Hardening Summary
+========================================
+
+File analyzed: .github/workflows/ci.yml
+
+FINDINGS AND FIXES
+------------------
+
+1. SCRIPT INJECTION via github.event.issue.title [CRITICAL]
+   Location: triage job, "Label issue" step, line 33
+   Issue: `${{ github.event.issue.title }}` is interpolated directly into the
+          shell script. An attacker who opens or edits an issue with a crafted
+          title (e.g., containing backticks, semicolons, or $(...)) can execute
+          arbitrary commands in the runner.
+   Fix: Moved the value into an environment variable (ISSUE_TITLE) and
+        referenced $ISSUE_TITLE in the shell script. Environment variable
+        expansion is safe; expression interpolation is not.
+
+2. SCRIPT INJECTION via github.event.issue.number [HIGH]
+   Location: triage job, "Label issue" step, line 34
+   Issue: `${{ github.event.issue.number }}` is interpolated into the run
+          script. Although issue numbers are currently integers, GitHub's
+          context values should never be trusted as safe for direct
+          interpolation because the shape of data could change, and it
+          establishes a bad precedent.
+   Fix: Moved to environment variable ISSUE_NUMBER for consistency and safety.
+
+3. MISSING PERMISSIONS DECLARATIONS [HIGH]
+   Location: workflow-level and both jobs
+   Issue: No `permissions:` key means jobs inherit the default GitHub token
+          scope, which can be write-all on some repository configurations.
+          This violates the principle of least privilege.
+   Fix: Added `permissions: contents: read` at the workflow level as a safe
+        default. Added job-level `permissions` blocks:
+        - build: contents: read (read-only, no writes needed)
+        - triage: contents: read + issues: write (only what gh issue edit needs)
+
+4. ACTIONS NOT PINNED TO COMMIT SHA [MEDIUM]
+   Location: all `uses:` references (actions/checkout@v4, actions/setup-node@v4,
+             actions/upload-artifact@v4)
+   Issue: Mutable version tags (e.g., @v4) can be silently redirected to a
+          different commit by the action author or by a supply-chain attacker
+          who compromises the action repository. This enables arbitrary code
+          execution in your CI environment.
+   Fix: Replaced all tags with immutable commit SHAs:
+        - actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        - actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        - actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+
+5. NO CONCURRENCY CONTROL [LOW]
+   Location: workflow-level
+   Issue: Without concurrency settings, multiple workflow runs can execute
+          simultaneously on the same ref, potentially causing race conditions,
+          redundant work, and inflated CI costs.
+   Fix: Added concurrency group keyed on workflow name + ref, with
+        cancel-in-progress: true so that a new push cancels the prior run.
+
+SUMMARY OF CHANGES
+-------------------
+- Added top-level `permissions: contents: read`
+- Added job-level `permissions` blocks with least-privilege scopes
+- Replaced ${{ github.event.issue.title }} and ${{ github.event.issue.number }}
+  with env-var references to eliminate script injection vectors
+- Pinned all three action references to verified commit SHAs
+- Added `concurrency` block to prevent redundant parallel runs
+
+REMAINING CONSIDERATIONS (out of scope for this fix)
+------------------------------------------------------
+- The `issues: [opened, edited]` trigger is a broad attack surface. Consider
+  restricting to `[opened]` only, or adding an actor allowlist check at the
+  start of the triage job.
+- The upload-artifact step references /tmp/triage.log which is never written
+  by the workflow. The artifact upload will silently produce an empty artifact;
+  consider removing it or writing the log explicitly.
+- Consider adding a timeout-minutes to each job to prevent runaway builds.

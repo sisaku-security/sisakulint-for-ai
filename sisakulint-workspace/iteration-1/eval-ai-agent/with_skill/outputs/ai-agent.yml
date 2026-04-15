@@ -1,0 +1,43 @@
+name: AI Code Review Agent
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  ai-review:
+    if: contains(github.event.comment.body, '/ai-review')
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        timeout-minutes: 5
+        with:
+          persist-credentials: false
+      - uses: anthropics/claude-code-action@28f83620103c48a57093dcc2837eec89e036bb9f # beta
+        timeout-minutes: 5
+        with:
+          prompt: |
+            Review the code changes and respond to this user request:
+            $COMMENT_BODY
+
+            Also check the PR title: $PR_TITLE
+          allowed_tools: |
+            Bash
+            Edit
+            Write
+            mcp__github__create_pull_request
+            mcp__github__push_files
+            mcp__github__delete_file
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        timeout-minutes: 5
+        with:
+          name: ai-review-output
+          path: /tmp/review.md

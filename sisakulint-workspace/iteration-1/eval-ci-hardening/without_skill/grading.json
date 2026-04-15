@@ -1,0 +1,30 @@
+{
+  "assertion_results": [
+    {
+      "text": "All action refs are pinned to full 40-character commit SHAs after fix",
+      "passed": true,
+      "evidence": "ci.yml line 25: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 (40 chars), line 27: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af (40 chars), line 44: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 (40 chars), line 56: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 (40 chars). All refs are pinned to 40-char SHAs."
+    },
+    {
+      "text": "Expression injection in run: step is remediated using env var pattern",
+      "passed": true,
+      "evidence": "ci.yml lines 48-54: env block defines ISSUE_TITLE=${{ github.event.issue.title }} and ISSUE_NUMBER=${{ github.event.issue.number }}; run script uses '$ISSUE_TITLE' and '$ISSUE_NUMBER' via shell variable expansion (not inline expression interpolation). Both injection vectors moved to env vars."
+    },
+    {
+      "text": "persist-credentials: false is added to actions/checkout steps",
+      "passed": false,
+      "evidence": "ci.yml lines 25 and 44 (both checkout steps) have no 'with:' block at all — 'persist-credentials: false' is absent from both. summary.txt does not mention this fix either. The credential exposure risk from artipacked findings is unaddressed."
+    },
+    {
+      "text": "timeout-minutes is set on all jobs",
+      "passed": false,
+      "evidence": "ci.yml build job (line 19) and triage job (line 37) have no 'timeout-minutes' field. summary.txt line 75 explicitly lists this as a remaining consideration out of scope: 'Consider adding a timeout-minutes to each job to prevent runaway builds.'"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  }
+}

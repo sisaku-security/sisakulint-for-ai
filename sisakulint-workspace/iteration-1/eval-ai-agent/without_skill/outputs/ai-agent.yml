@@ -1,0 +1,44 @@
+name: AI Code Review Agent
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  ai-review:
+    # Only run on pull request comments (not issue comments) that contain the trigger
+    if: >
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, '/ai-review') &&
+      github.event.comment.author_association == 'MEMBER' ||
+      github.event.comment.author_association == 'OWNER' ||
+      github.event.comment.author_association == 'COLLABORATOR'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: anthropics/claude-code-action@main
+        env:
+          # Sanitize user input: pass via env var, not directly interpolated into prompt
+          USER_COMMENT: ${{ github.event.comment.body }}
+        with:
+          prompt: |
+            Review the code changes and respond to this user request.
+            The user comment is available in the environment variable USER_COMMENT.
+            Do not execute arbitrary commands or access resources outside this repository.
+
+          allowed_tools: |
+            mcp__github__create_pull_request
+
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08  # v4.6.0
+        with:
+          name: ai-review-output
+          path: /tmp/review.md

@@ -1,0 +1,57 @@
+.github/workflows/ci.yml:1:1: workflow does not have explicit 'permissions' block. Without explicit permissions, the workflow uses the default repository permissions which may be overly broad. Add a 'permissions:' block to follow the principle of least privilege. See https://sisaku-security.github.io/lint/docs/rules/permissions/ [permissions]
+      1 👈|name: CI
+       
+.github/workflows/ci.yml:1:1: dependabot.yaml does not exist. Without Dependabot, major version updates (e.g., v3 -> v4) for GitHub Actions won't be automated. Create .github/dependabot.yaml with github-actions ecosystem. See https://sisaku-security.github.io/lint/docs/rules/dependabotgithubactionsrule/ [dependabot-github-actions]
+      1 👈|name: CI
+       
+.github/workflows/ci.yml:7:3: dangerous trigger (critical): workflow uses privileged trigger(s) [issues] without any security mitigations. These triggers grant write access and secrets access to potentially untrusted code. Add at least one mitigation: restrict permissions (permissions: read-all or permissions: {}), use environment protection, add label conditions, or check github.actor. See https://sisaku-security.github.io/lint/docs/rules/dangeroustriggersrulecritical/ [dangerous-triggers-critical]
+      7 👈|  issues:
+        
+.github/workflows/ci.yml:11:3: timeout-minutes is not set for job build; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       11 👈|  build:
+         
+.github/workflows/ci.yml:14:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       14 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:14:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       14 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:14:9: [Medium] actions/checkout without 'persist-credentials: false' at step "<unnamed>". Credentials are stored in .git/config. While no dangerous upload-artifact was found in this job, consider adding 'persist-credentials: false' to prevent credential exposure. See https://unit42.paloaltonetworks.com/github-repo-artifacts-leak-tokens/ [artipacked]
+       14 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:16:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       16 👈|      - uses: actions/setup-node@v4
+               
+.github/workflows/ci.yml:16:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       16 👈|      - uses: actions/setup-node@v4
+               
+.github/workflows/ci.yml:20:9: timeout-minutes is not set for step Install dependencies; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       20 👈|      - name: Install dependencies
+               
+.github/workflows/ci.yml:23:9: timeout-minutes is not set for step Run tests; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       23 👈|      - name: Run tests
+               
+.github/workflows/ci.yml:26:3: timeout-minutes is not set for job triage; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       26 👈|  triage:
+         
+.github/workflows/ci.yml:29:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       29 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:29:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       29 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:29:9: [Medium] actions/checkout without 'persist-credentials: false' at step "<unnamed>". Credentials are stored in .git/config. While no dangerous upload-artifact was found in this job, consider adding 'persist-credentials: false' to prevent credential exposure. See https://unit42.paloaltonetworks.com/github-repo-artifacts-leak-tokens/ [artipacked]
+       29 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ci.yml:31:9: timeout-minutes is not set for step Label issue; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       31 👈|      - name: Label issue
+               
+.github/workflows/ci.yml:33:38: code injection (critical): "github.event.issue.title" is potentially untrusted and used in a workflow with privileged triggers. Avoid using it directly in inline scripts. Instead, pass it through an environment variable. See https://sisaku-security.github.io/lint/docs/rules/codeinjectioncritical/ [code-injection-critical]
+       33 👈|          echo "Processing issue: ${{ github.event.issue.title }}"
+                                            
+.github/workflows/ci.yml:38:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       38 👈|      - uses: actions/upload-artifact@v4
+               
+.github/workflows/ci.yml:38:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       38 👈|      - uses: actions/upload-artifact@v4
+               

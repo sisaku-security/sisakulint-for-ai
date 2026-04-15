@@ -1,0 +1,20 @@
+{
+  "assertion_results": [
+    {
+      "text": "No unnecessary modifications were made to the workflow",
+      "passed": true,
+      "evidence": "The output clean.yml is byte-for-byte identical to the original clean-workflow.yml input. No changes were made to the workflow file — all pinned SHAs, permissions, job-level timeouts, persist-credentials settings, and formatting are preserved exactly."
+    },
+    {
+      "text": "The output correctly reports the workflow as clean or with minimal issues",
+      "passed": true,
+      "evidence": "summary.txt states 'OVERALL ASSESSMENT: WELL-HARDENED — No security issues found' and 'CONCLUSION: The workflow follows GitHub Actions security hardening best practices consistently... No remediation is required.' The RECOMMENDATIONS section explicitly says 'None required' and only lists optional (non-security) enhancements. This correctly characterizes the original clean workflow."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 0,
+    "total": 2,
+    "pass_rate": 1.0
+  }
+}

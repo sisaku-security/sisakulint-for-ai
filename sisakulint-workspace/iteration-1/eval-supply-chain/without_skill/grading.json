@@ -1,0 +1,30 @@
+{
+  "assertion_results": [
+    {
+      "text": "untrusted-checkout finding is identified and remediated",
+      "passed": true,
+      "evidence": "summary.txt explicitly identifies the 'Pwn Request via pull_request_target + untrusted checkout' as CRITICAL and marks it Fixed=Yes. The remediated release.yml changes the trigger to 'push: tags: [v*]' and removes the 'ref: github.event.pull_request.head.sha' checkout override entirely."
+    },
+    {
+      "text": "Secrets exposure is reduced to minimum required scope",
+      "passed": true,
+      "evidence": "summary.txt identifies 'Excessive secrets exposed in environment' (6 secrets) as MEDIUM severity and marks it Fixed=Yes. The remediated release.yml removes DATABASE_URL and STRIPE_SECRET_KEY from the Deploy step, retaining only NPM_TOKEN, SLACK_WEBHOOK, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY with an explanatory comment that the removed secrets should be fetched from a runtime secrets manager."
+    },
+    {
+      "text": "Container images are pinned to specific versions or digests",
+      "passed": true,
+      "evidence": "summary.txt identifies 'Mutable action tags (3 actions)' as HIGH severity and marks it Fixed=Yes. The remediated release.yml pins all 3 actions to full commit SHAs: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 (v4.2.2), actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af (v4.1.0), docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 (v6.9.0)."
+    },
+    {
+      "text": "A dependabot.yml file is created or recommended for github-actions ecosystem",
+      "passed": false,
+      "evidence": "No dependabot.yml file exists in the without_skill outputs directory. The summary.txt does not mention or recommend creating a dependabot.yml for the github-actions ecosystem. The only files produced are release.yml and summary.txt."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  }
+}

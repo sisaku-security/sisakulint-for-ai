@@ -1,0 +1,30 @@
+{
+  "assertion_results": [
+    {
+      "text": "Unrestricted trigger issue is flagged (any user can trigger AI execution)",
+      "passed": true,
+      "evidence": "summary.txt section 2 explicitly states: 'No Authorization Check — Any User Can Trigger the Agent (HIGH): The workflow runs for any comment containing /ai-review, regardless of who posted it. External contributors, bots, or malicious actors can trigger the expensive AI agent.' Fixed ai-agent.yml adds author_association check restricting to MEMBER/OWNER/COLLABORATOR."
+    },
+    {
+      "text": "Excessive tool grants are identified",
+      "passed": true,
+      "evidence": "summary.txt section 5 states: 'Dangerous Allowed Tools — Bash, Edit, Write, delete_file, push_files (HIGH): The AI agent is granted access to Bash (arbitrary shell commands), Edit/Write (file modification), mcp__github__push_files, mcp__github__delete_file. These tools together give the AI full write access to the codebase.' Fixed ai-agent.yml reduces allowed_tools to only mcp__github__create_pull_request."
+    },
+    {
+      "text": "Prompt injection risk from untrusted input interpolation is flagged",
+      "passed": true,
+      "evidence": "summary.txt section 1 states: 'Prompt Injection via Untrusted User Input (CRITICAL): github.event.comment.body is directly interpolated into the prompt field. Any user can post a comment containing /ai-review followed by malicious instructions to hijack the AI agent.' Also section 7 flags PR_TITLE as similarly unsafe. Fixed ai-agent.yml passes USER_COMMENT as env var."
+    },
+    {
+      "text": "Specific remediation steps are provided for each AI security finding",
+      "passed": true,
+      "evidence": "summary.txt provides Before/After comparison table and fix descriptions for all 7 issues: (1) env var for prompt injection, (2) author_association check, (3) id-token:write removed, (4) contents downgraded to read, (5) tools reduced to create_pull_request only, (6) SHA pinning, (7) PR_TITLE removed from prompt. Fixed ai-agent.yml implements these changes."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.00
+  }
+}

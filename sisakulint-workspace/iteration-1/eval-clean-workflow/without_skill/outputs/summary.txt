@@ -1,0 +1,90 @@
+Security Review Summary: .github/workflows/clean.yml
+======================================================
+Date: 2026-04-15
+Reviewer: General knowledge review (no automated tooling)
+
+OVERALL ASSESSMENT: WELL-HARDENED — No security issues found.
+
+The workflow demonstrates strong adherence to GitHub Actions security best practices.
+All major hardening controls are present and correctly applied.
+
+---
+
+FINDINGS
+--------
+
+No security vulnerabilities were identified. The workflow is considered clean.
+
+---
+
+POSITIVE SECURITY CONTROLS OBSERVED
+-------------------------------------
+
+1. PINNED ACTIONS TO FULL COMMIT SHA
+   - actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 (v4.2.2)
+   - actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af (v4.1.0)
+   - Both actions are pinned by full SHA rather than mutable tags, preventing
+     supply-chain attacks from tag mutation or tag hijacking.
+   - Human-readable version comments (# v4.2.2, # v4.1.0) aid maintainability.
+
+2. MINIMAL PERMISSIONS (PRINCIPLE OF LEAST PRIVILEGE)
+   - Workflow-level default: contents: read only.
+   - build job: contents: read (minimal for checkout).
+   - lint job: contents: read (minimal for checkout).
+   - release job: contents: write + id-token: write (only what is needed for
+     publishing; no additional overprivileged scopes like pull-requests or
+     packages).
+   - No GITHUB_TOKEN with write-all or admin permissions.
+
+3. PERSIST-CREDENTIALS: FALSE
+   - All checkout steps use persist-credentials: false, preventing git
+     credentials from being exposed to subsequent steps or subprocesses.
+
+4. NO SCRIPT INJECTION / EXPRESSION INJECTION RISK
+   - No untrusted user-supplied data (e.g., github.event.pull_request.title,
+     github.head_ref) is interpolated directly into run: shell scripts.
+   - VERSION is bound via an env: block (${{ github.ref_name }} -> VERSION env var)
+     rather than inline shell interpolation, mitigating shell injection risk.
+
+5. TIMEOUT-MINUTES SET ON ALL JOBS
+   - build: 15 minutes
+   - lint: 10 minutes
+   - release: 20 minutes
+   - Prevents runaway jobs from consuming Actions minutes indefinitely.
+
+6. GATE ON RELEASE JOB
+   - release job has: if: github.ref == 'refs/heads/main' and needs: [build, lint],
+     ensuring publishing only happens on the main branch after CI passes.
+
+7. NPM TRUSTED PUBLISHING PATTERN
+   - NODE_AUTH_TOKEN from secrets (not hardcoded).
+   - id-token: write scoped only to the release job, supporting OIDC-based
+     trusted publishing.
+
+8. DETERMINISTIC DEPENDENCY INSTALLATION
+   - All jobs use npm ci (not npm install), ensuring reproducible installs
+     from a lockfile with integrity checking.
+
+---
+
+RECOMMENDATIONS
+---------------
+
+None required — the workflow is already well-hardened.
+
+Optional enhancements to consider (not vulnerabilities):
+- Pin ubuntu-latest to a specific runner version (e.g., ubuntu-24.04) for
+  full reproducibility across runner image updates.
+- Add a step-level environment variable for NODE_VERSION to avoid repeating
+  the literal '20' in multiple places (DRY / maintainability, not security).
+- Consider adding a provenance/SBOM step (actions/attest-build-provenance) for
+  supply-chain transparency if publishing to npm with provenance is desired.
+
+---
+
+CONCLUSION
+----------
+
+The workflow follows GitHub Actions security hardening best practices consistently:
+pinned SHA actions, minimal scoped permissions, no credential leakage, no expression
+injection, timeouts, and release gating. No remediation is required.

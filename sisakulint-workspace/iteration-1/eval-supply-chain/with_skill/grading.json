@@ -1,0 +1,40 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed to identify issues",
+      "passed": true,
+      "evidence": "initial-scan.txt contains full sisakulint output with 18 findings including [untrusted-checkout], [dangerous-triggers-critical], [commit-sha], [permissions], [dependabot-github-actions], and multiple [missing-timeout-minutes] and [cache-poisoning-poisonable-step] findings."
+    },
+    {
+      "text": "untrusted-checkout finding is identified and remediated",
+      "passed": true,
+      "evidence": "initial-scan.txt identifies the untrusted-checkout finding at line 15 of the original release.yml. The remediated release.yml changes the trigger from 'pull_request_target' to 'pull_request' (line 4) and removes the dangerous 'ref: ${{ github.event.pull_request.head.sha }}' checkout override, eliminating the pwn-request vector."
+    },
+    {
+      "text": "Secrets exposure is reduced to minimum required scope",
+      "passed": false,
+      "evidence": "The remediated release.yml still exposes all 6 original secrets in the Deploy step: NPM_TOKEN, SLACK_WEBHOOK, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, DATABASE_URL, and STRIPE_SECRET_KEY (lines 44-50). DATABASE_URL and STRIPE_SECRET_KEY are not necessary for a deploy step and represent excessive blast radius. No reduction was made."
+    },
+    {
+      "text": "Container images are pinned to specific versions or digests",
+      "passed": true,
+      "evidence": "All 3 action references in the remediated release.yml are pinned to full-length commit SHAs: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, and docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25. Mutable tags replaced."
+    },
+    {
+      "text": "A dependabot.yml file is created or recommended for github-actions ecosystem",
+      "passed": true,
+      "evidence": "dependabot.yml was created with 'package-ecosystem: github-actions', directory '/', and 'schedule: interval: weekly' — correctly targeting the GitHub Actions ecosystem."
+    },
+    {
+      "text": "Final sisakulint run confirms all findings resolved",
+      "passed": false,
+      "evidence": "final-scan.txt exists but is completely empty (0 bytes). There is no evidence that sisakulint was run on the remediated workflow, and no confirmation that all findings were resolved. Remaining issues in the remediated file likely include excessive secrets and possibly others."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  }
+}

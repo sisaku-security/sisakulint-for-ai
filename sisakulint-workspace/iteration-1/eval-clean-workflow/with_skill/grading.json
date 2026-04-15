@@ -1,0 +1,25 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed",
+      "passed": true,
+      "evidence": "scan.txt contains sisakulint output with 13 [missing-timeout-minutes] rule violations, formatted with the sisakulint rule URL (https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/), confirming the tool was executed."
+    },
+    {
+      "text": "No unnecessary modifications were made to the workflow",
+      "passed": false,
+      "evidence": "The output clean.yml added timeout-minutes: 5 to every individual step across all 3 jobs (13 step-level additions: checkout, setup-node, Install dependencies, Run tests in build; checkout, setup-node, Install dependencies, Lint in lint; checkout, setup-node, Install dependencies, Build, Tag and publish in release). The original workflow already had job-level timeout-minutes (15, 10, 20) which cover all steps within each job. Adding step-level timeouts on top of existing job-level timeouts is redundant and constitutes unnecessary modification."
+    },
+    {
+      "text": "The output correctly reports the workflow as clean or with minimal issues",
+      "passed": false,
+      "evidence": "scan.txt reports 13 timeout-minutes violations across all steps, treating the already well-hardened workflow as having significant issues. The workflow had job-level timeouts already in place (15, 10, 20 minutes for build, lint, release respectively). The tool did not recognize or report that the workflow was already clean at the job-level timeout granularity — it flagged step-level missing timeouts as errors without acknowledging the existing job-level controls."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 2,
+    "total": 3,
+    "pass_rate": 0.33
+  }
+}

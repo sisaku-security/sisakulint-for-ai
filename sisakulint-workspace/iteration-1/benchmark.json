@@ -1,0 +1,42 @@
+{
+  "iteration": 1,
+  "date": "2026-04-15",
+  "eval_results": {
+    "eval-ci-hardening": {
+      "with_skill": { "passed": 6, "total": 6, "pass_rate": 1.0 },
+      "without_skill": { "passed": 2, "total": 4, "pass_rate": 0.5 },
+      "delta_pass_rate": 0.5
+    },
+    "eval-supply-chain": {
+      "with_skill": { "passed": 4, "total": 6, "pass_rate": 0.67 },
+      "without_skill": { "passed": 3, "total": 4, "pass_rate": 0.75 },
+      "delta_pass_rate": -0.08
+    },
+    "eval-clean-workflow": {
+      "with_skill": { "passed": 1, "total": 3, "pass_rate": 0.33 },
+      "without_skill": { "passed": 2, "total": 2, "pass_rate": 1.0 },
+      "delta_pass_rate": -0.67
+    },
+    "eval-ai-agent": {
+      "with_skill": { "passed": 3, "total": 5, "pass_rate": 0.6 },
+      "without_skill": { "passed": 4, "total": 4, "pass_rate": 1.0 },
+      "delta_pass_rate": -0.4
+    }
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 0.65, "per_eval": [1.0, 0.67, 0.33, 0.6] },
+      "total_passed": 14,
+      "total_assertions": 20
+    },
+    "without_skill": {
+      "pass_rate": { "mean": 0.81, "per_eval": [0.5, 0.75, 1.0, 1.0] },
+      "total_passed": 11,
+      "total_assertions": 14
+    },
+    "delta": {
+      "mean_pass_rate": -0.16,
+      "note": "Negative delta means without_skill outperformed with_skill on average. Skill adds value for standard hardening (eval-1: +50%) but hurts on false-positive handling, secrets reduction, and incomplete AI rules."
+    }
+  }
+}

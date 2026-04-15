@@ -1,0 +1,50 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  issues:
+    types: [opened, edited]
+permissions: {}
+jobs:
+  build:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        timeout-minutes: 5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        timeout-minutes: 5
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        timeout-minutes: 5
+        run: npm ci
+      - name: Run tests
+        timeout-minutes: 5
+        run: npm test
+  triage:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        timeout-minutes: 5
+        with:
+          persist-credentials: false
+      - name: Label issue
+        timeout-minutes: 5
+        run: |
+          echo "Processing issue: $ISSUE_TITLE"
+          gh issue edit "${{ github.event.issue.number }}" --add-label "triaged"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        timeout-minutes: 5
+        with:
+          name: triage-log
+          path: /tmp/triage.log

@@ -1,0 +1,35 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint identifies AI agent security issues",
+      "passed": true,
+      "evidence": "initial-scan.txt shows sisakulint flagged [ai-action-prompt-injection] for untrusted input interpolation in the prompt parameter, plus [commit-sha], [missing-timeout-minutes], [artipacked], and [dependabot-github-actions] rules. The tool successfully identified AI-specific security concerns."
+    },
+    {
+      "text": "Unrestricted trigger issue is flagged (any user can trigger AI execution)",
+      "passed": false,
+      "evidence": "initial-scan.txt contains no rule or finding about unrestricted trigger access (no check for author_association or authorization gating). sisakulint flagged prompt injection and commit SHA issues but did not flag that any commenter can trigger the AI agent. The fixed ai-agent.yml does add an author_association check, but there is no evidence sisakulint itself surfaced this — it appears to have been added as additional hardening beyond what sisakulint detected."
+    },
+    {
+      "text": "Excessive tool grants are identified",
+      "passed": false,
+      "evidence": "initial-scan.txt has no finding related to excessive allowed_tools (Bash, Edit, Write, mcp__github__push_files, mcp__github__delete_file). sisakulint did not flag the overly broad tool grants to the AI agent. No [ai-action-excessive-tools] or equivalent rule appears in the scan output."
+    },
+    {
+      "text": "Prompt injection risk from untrusted input interpolation is flagged",
+      "passed": true,
+      "evidence": "initial-scan.txt line 22 explicitly shows: 'action \"anthropics/claude-code-action@beta\" has untrusted input \"github.event.comment.body\", \"github.event.pull_request.title\" directly interpolated into \"prompt\" parameter. This enables prompt injection attacks (Clinejection). Pass untrusted values through environment variables instead of embedding them in the prompt. [ai-action-prompt-injection]'"
+    },
+    {
+      "text": "Specific remediation steps are provided for each AI security finding",
+      "passed": true,
+      "evidence": "The fixed ai-agent.yml demonstrates remediation was applied: (1) commit SHA pins added for all actions, (2) persist-credentials: false added, (3) timeout-minutes set on all steps, (4) COMMENT_BODY and PR_TITLE passed as env vars instead of direct prompt interpolation. The sisakulint rule links (e.g. https://sisaku-security.github.io/lint/docs/rules/...) serve as remediation guidance. However, remediation for unrestricted trigger and excessive tools is not traceable to sisakulint output."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.60
+  }
+}

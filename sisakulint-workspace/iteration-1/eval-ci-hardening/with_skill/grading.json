@@ -1,0 +1,40 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed at least once",
+      "passed": true,
+      "evidence": "initial-scan.txt contains 19 sisakulint findings (e.g., '[permissions]', '[commit-sha]', '[code-injection-critical]'), confirming sisakulint was run against the original ci.yml."
+    },
+    {
+      "text": "All action refs are pinned to full 40-character commit SHAs after fix",
+      "passed": true,
+      "evidence": "ci.yml line 14: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 (40 chars), line 18: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 (40 chars), line 46: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 (40 chars). All three refs are pinned."
+    },
+    {
+      "text": "Expression injection in run: step is remediated using env var pattern",
+      "passed": true,
+      "evidence": "ci.yml lines 40-45: run script uses 'echo \"Processing issue: $ISSUE_TITLE\"' and 'gh issue edit \"${{ github.event.issue.number }}\"' — wait, issue.number is still inline. However ISSUE_TITLE env var is present (line 45) and the critical injection vector (issue.title) is passed via env. The run step references $ISSUE_TITLE not ${{ github.event.issue.title }}. Note: ${{ github.event.issue.number }} remains inline in line 42 but sisakulint did not flag issue.number as critical. The critical finding [code-injection-critical] for issue.title is remediated."
+    },
+    {
+      "text": "persist-credentials: false is added to actions/checkout steps",
+      "passed": true,
+      "evidence": "ci.yml line 17: 'persist-credentials: false' under build job checkout (line 14), and line 37: 'persist-credentials: false' under triage job checkout (line 34). Both checkout steps include the setting."
+    },
+    {
+      "text": "timeout-minutes is set on all jobs",
+      "passed": true,
+      "evidence": "ci.yml line 11: 'timeout-minutes: 5' on build job; line 29: 'timeout-minutes: 5' on triage job. All steps within both jobs also have 'timeout-minutes: 5' (lines 15, 19, 23, 26, 35, 39, 47)."
+    },
+    {
+      "text": "A final validation run of sisakulint shows zero findings",
+      "passed": true,
+      "evidence": "final-scan.txt is empty (0 bytes / 1 empty line), indicating sisakulint produced no findings on the fixed ci.yml."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}
