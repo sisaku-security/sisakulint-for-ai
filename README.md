@@ -5,31 +5,8 @@
 ## Install
 
 ```bash
-# Claude Code
-claude install-skill https://github.com/sisaku-security/sisakulint-for-ai
-
-# Or copy SKILL.md to your .claude/skills/ directory
+npx @anthropic-ai/skills add sisaku-security/sisakulint-for-ai
 ```
-
-Requires Go 1.23+ (sisakulint is installed automatically on first run).
-
-## Usage
-
-The skill activates when you ask about GitHub Actions workflow security:
-
-```
-> Scan my workflows for security issues
-> Harden .github/workflows/ci.yml
-> Review this workflow for supply chain risks
-> このワークフローのセキュリティを確認して
-```
-
-The agent will:
-
-1. Run `sisakulint` to detect issues
-2. Apply auto-fix (`sisakulint -fix on`) for SHA pinning and timeouts
-3. Apply manual remediations for rules auto-fix cannot handle
-4. Re-run until zero findings
 
 ## Eval results
 
