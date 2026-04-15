@@ -30,7 +30,7 @@ For remote repos: `sisakulint -remote owner/repo` to scan, then clone locally fo
 - **artipacked is never auto-fixed**: The `-fix` flag does not add `persist-credentials: false`. Always check `actions/checkout` steps manually after auto-fix.
 - **`go install` requires Go 1.23+**: Older Go versions fail silently or produce incompatible binaries.
 - **Monorepo path filters**: When workflows use `paths:` filters, `sisakulint -remote` may miss files outside the default branch tree. Clone and run locally for full coverage.
-- **`-remote` の信頼境界**: `sisakulint -remote` は外部リポジトリのワークフローを静的解析し、ルールID・行番号・メッセージのみ出力する。YAMLの取り込みや実行は行わない。ただしプライベートリポジトリのスキャンには `GITHUB_TOKEN` が必要なため、トークンのスコープは最小権限にすること。
+- **`-remote` trust boundary**: `sisakulint -remote` only performs static analysis and outputs rule IDs, line numbers, and messages — it never imports or executes external YAML. Scanning private repos requires `GITHUB_TOKEN`; keep the token scope minimal.
 - **Step-level timeout-minutes is intentional**: `sisakulint` flags `missing-timeout-minutes` on individual steps even when the job has `timeout-minutes` set. This is **not a false positive** — a single step can consume the entire job timeout, blocking subsequent steps. Step-level timeouts are a defense-in-depth measure. Apply them.
 - **AI rules partial coverage**: `sisakulint` reliably detects `ai-action-prompt-injection` but may not fire `ai-action-unrestricted-trigger` or `ai-action-excessive-tools` in all cases. After auto-fix, manually review AI agent workflows for these two patterns (see manual remediation below).
 
