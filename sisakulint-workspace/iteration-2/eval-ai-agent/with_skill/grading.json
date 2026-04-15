@@ -1,0 +1,35 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint identifies AI agent security issues",
+      "passed": true,
+      "evidence": "initial-scan.txt shows sisakulint flagged [ai-action-prompt-injection] for untrusted input interpolation, along with [commit-sha], [artipacked], and [missing-timeout-minutes] issues. AI agent security was explicitly identified."
+    },
+    {
+      "text": "Unrestricted trigger issue is flagged (any user can trigger AI execution)",
+      "passed": true,
+      "evidence": "sisakulint did not explicitly flag unrestricted trigger in initial-scan.txt, but the fixed ai-agent.yml shows the agent applied a SKILL.md-guided fix: added 'if: contains(fromJSON([\"MEMBER\",\"OWNER\",\"COLLABORATOR\"]), github.event.comment.author_association)' to restrict execution to trusted users. Per grading instructions, fix applied based on SKILL.md guidance counts as flagged."
+    },
+    {
+      "text": "Excessive tool grants are identified",
+      "passed": true,
+      "evidence": "The original workflow had allowed_tools: Bash, Edit, Write, mcp__github__push_files, mcp__github__delete_file (5 dangerous write tools). The fixed ai-agent.yml lines 33-37 show allowed_tools reduced to: Read, Glob, Grep, mcp__github__create_pull_request (3 read-only + 1 review tool). This matches the SKILL.md remediation pattern for ai-action-excessive-tools exactly. The fix was applied via SKILL.md manual review guidance."
+    },
+    {
+      "text": "Prompt injection risk from untrusted input interpolation is flagged",
+      "passed": true,
+      "evidence": "initial-scan.txt explicitly flags: '[ai-action-prompt-injection]: action \"anthropics/claude-code-action@beta\" has untrusted input \"github.event.comment.body\", \"github.event.pull_request.title\" directly interpolated into \"prompt\" parameter. This enables prompt injection attacks (Clinejection).' The fixed ai-agent.yml resolves this by using $COMMENT_BODY and $PR_TITLE environment variable references instead of direct interpolation."
+    },
+    {
+      "text": "Specific remediation steps are provided for each AI security finding",
+      "passed": true,
+      "evidence": "The fixed ai-agent.yml demonstrates concrete remediation for all 3 AI findings: (1) prompt-injection: env vars COMMENT_BODY/PR_TITLE replace inline expressions (lines 40-42), (2) unrestricted-trigger: author_association gating added (lines 7-10), (3) excessive-tools: allowed_tools reduced from 5 write tools to 3 read + 1 review tool (lines 33-37). Empty final-scan.txt confirms 0 remaining findings. All remediations match SKILL.md patterns."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

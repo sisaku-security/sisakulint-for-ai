@@ -1,0 +1,88 @@
+[sisaku:🤔] linting repository... .
+[sisaku:🤔] Detected project: /tmp/sisakulint-eval-supply-chain
+[sisaku:🤔] the number of corrected yaml file 1 yaml files
+[sisaku:🤔] validating workflow... .github/workflows/release.yml
+[sisaku:🤔] Detected project: /tmp/sisakulint-eval-supply-chain
+[linter mode] no configuration file
+[sisaku:🤔] parsed workflow in 0ms .github/workflows/release.yml
+[untrusted-checkout] Collected trigger 'pull_request' at line:3,col:3
+[untrusted-checkout-toctou/high] Found PR trigger 'pull_request' at line:3,col:3
+[untrusted-checkout] Job 'build-and-publish' filtered out privileged triggers via if condition
+[impostor-commit] Error verifying commit actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683: failed to fetch tags for actions/checkout: GET https://api.github.com/repos/actions/checkout/tags?per_page=100: 403 API rate limit exceeded for 1.75.211.4. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) [rate reset in 39m12s]
+[known-vulnerable-actions] resolved version for actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 -> v4.2.2
+[known-vulnerable-actions] found 0 vulnerabilities for actions/checkout@v4.2.2
+[SyntaxTreeVisitor] VisitStep at line:13,col:9, step "line:13,col:9" took 1282 ms
+[impostor-commit] Error verifying commit actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af: failed to fetch tags for actions/setup-node: GET https://api.github.com/repos/actions/setup-node/tags?per_page=100: 403 API rate limit of 60 still exceeded until 2026-04-15 16:52:30 +0900 JST, not making remote request. [rate reset in 39m11s]
+[known-vulnerable-actions] resolved version for actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af -> v4.1.0
+[known-vulnerable-actions] found 0 vulnerabilities for actions/setup-node@v4.1.0
+[SyntaxTreeVisitor] VisitStep at line:18,col:9, step "line:18,col:9" took 900 ms
+[SyntaxTreeVisitor] VisitStep at line:23,col:9, step "Install dependencies" took 0 ms
+[SyntaxTreeVisitor] VisitStep at line:27,col:9, step "Build" took 0 ms
+[impostor-commit] Error verifying commit docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25: failed to fetch tags for docker/build-push-action: GET https://api.github.com/repos/docker/build-push-action/tags?per_page=100: 403 API rate limit of 60 still exceeded until 2026-04-15 16:52:30 +0900 JST, not making remote request. [rate reset in 39m10s]
+[known-vulnerable-actions] resolved version for docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 -> v5.4.0
+[known-vulnerable-actions] found 0 vulnerabilities for docker/build-push-action@v5.4.0
+[SyntaxTreeVisitor] VisitStep at line:31,col:9, step "Publish to registry" took 813 ms
+[SyntaxTreeVisitor] VisitStep at line:38,col:9, step "Deploy" took 0 ms
+[SyntaxTreeVisitor] VisitJobPost was taking 6 steps, at job "build-and-publish" took 0 ms
+[SyntaxTreeVisitor] VisitStep was taking 6 steps took 2998 ms
+[SyntaxTreeVisitor] VisitJobPre took 2999 ms
+[SyntaxTreeVisitor] VisitWorkflowPost took 0 ms
+[SyntaxTreeVisitor] VisitJob was taking 1 jobs took 2999 ms
+[SyntaxTreeVisitor] VisitWorkflowPre took 2999 ms
+[linter mode] credentials found 0 errors
+[linter mode] needs found 0 errors
+[linter mode] env-var found 0 errors
+[linter mode] id found 0 errors
+[linter mode] permissions found 0 errors
+[linter mode] workflow-call found 0 errors
+[linter mode] expression found 0 errors
+[linter mode] deprecated-commands found 0 errors
+[linter mode] cond found 0 errors
+[linter mode] missing-timeout-minutes found 0 errors
+[linter mode] code-injection-critical found 0 errors
+[linter mode] code-injection-medium found 0 errors
+[linter mode] envvar-injection-critical found 0 errors
+[linter mode] envvar-injection-medium found 0 errors
+[linter mode] envpath-injection-critical found 0 errors
+[linter mode] envpath-injection-medium found 0 errors
+[linter mode] output-clobbering-critical found 0 errors
+[linter mode] output-clobbering-medium found 0 errors
+[linter mode] commit-sha found 0 errors
+[linter mode] dependabot-github-actions found 0 errors
+[linter mode] artifact-poisoning-critical found 0 errors
+[linter mode] artifact-poisoning-medium found 0 errors
+[linter mode] action-list found 0 errors
+[linter mode] untrusted-checkout found 0 errors
+[linter mode] cache-poisoning found 0 errors
+[linter mode] cache-poisoning-poisonable-step found 0 errors
+[linter mode] secret-exposure found 0 errors
+[linter mode] unmasked-secret-exposure found 0 errors
+[linter mode] improper-access-control found 0 errors
+[linter mode] impostor-commit found 0 errors
+[linter mode] untrusted-checkout-toctou/critical found 0 errors
+[linter mode] untrusted-checkout-toctou/high found 0 errors
+[linter mode] ref-confusion found 0 errors
+[linter mode] obfuscation found 0 errors
+[linter mode] known-vulnerable-actions found 0 errors
+[linter mode] bot-conditions found 0 errors
+[linter mode] artipacked found 0 errors
+[linter mode] unsound-contains found 0 errors
+[linter mode] self-hosted-runner found 0 errors
+[linter mode] archived-uses found 0 errors
+[linter mode] unpinned-images found 0 errors
+[linter mode] secrets-in-artifacts found 0 errors
+[linter mode] secret-exfiltration found 0 errors
+[linter mode] reusable-workflow-taint found 0 errors
+[linter mode] dangerous-triggers-critical found 0 errors
+[linter mode] dangerous-triggers-medium found 0 errors
+[linter mode] secrets-inherit found 0 errors
+[linter mode] argument-injection-critical found 0 errors
+[linter mode] argument-injection-medium found 0 errors
+[linter mode] request-forgery-critical found 0 errors
+[linter mode] request-forgery-medium found 0 errors
+[linter mode] cache-bloat found 0 errors
+[linter mode] ai-action-unrestricted-trigger found 0 errors
+[linter mode] ai-action-excessive-tools found 0 errors
+[linter mode] ai-action-prompt-injection found 0 errors
+[sisaku:🤔] found 0 errors in 3000ms .github/workflows/release.yml
+Exit code: 0

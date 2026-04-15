@@ -1,0 +1,44 @@
+name: Release
+on:
+  pull_request:
+    types: [opened, synchronize]
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build-and-publish:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        timeout-minutes: 5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        timeout-minutes: 5
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        timeout-minutes: 10
+        run: npm ci
+
+      - name: Build
+        timeout-minutes: 10
+        run: npm run build
+
+      - name: Publish to registry
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5
+        timeout-minutes: 15
+        with:
+          push: true
+          tags: myorg/myapp:latest
+
+      - name: Deploy
+        timeout-minutes: 10
+        run: ./scripts/deploy.sh
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -1,0 +1,39 @@
+.github/workflows/clean.yml:21:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       21 👈|      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+               
+.github/workflows/clean.yml:26:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       26 👈|      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+               
+.github/workflows/clean.yml:31:9: timeout-minutes is not set for step Install dependencies; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       31 👈|      - name: Install dependencies
+               
+.github/workflows/clean.yml:34:9: timeout-minutes is not set for step Run tests; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       34 👈|      - name: Run tests
+               
+.github/workflows/clean.yml:43:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       43 👈|      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+               
+.github/workflows/clean.yml:47:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       47 👈|      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+               
+.github/workflows/clean.yml:52:9: timeout-minutes is not set for step Install dependencies; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       52 👈|      - name: Install dependencies
+               
+.github/workflows/clean.yml:55:9: timeout-minutes is not set for step Lint; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       55 👈|      - name: Lint
+               
+.github/workflows/clean.yml:67:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       67 👈|      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+               
+.github/workflows/clean.yml:71:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       71 👈|      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+               
+.github/workflows/clean.yml:76:9: timeout-minutes is not set for step Install dependencies; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       76 👈|      - name: Install dependencies
+               
+.github/workflows/clean.yml:79:9: timeout-minutes is not set for step Build; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       79 👈|      - name: Build
+               
+.github/workflows/clean.yml:83:9: timeout-minutes is not set for step Tag and publish; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       83 👈|      - name: Tag and publish
+               

@@ -1,0 +1,30 @@
+.github/workflows/ai-agent.yml:1:1: dependabot.yaml does not exist. Without Dependabot, major version updates (e.g., v3 -> v4) for GitHub Actions won't be automated. Create .github/dependabot.yaml with github-actions ecosystem. See https://sisaku-security.github.io/lint/docs/rules/dependabotgithubactionsrule/ [dependabot-github-actions]
+      1 👈|name: AI Code Review Agent
+       
+.github/workflows/ai-agent.yml:8:3: timeout-minutes is not set for job ai-review; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+      8 👈|  ai-review:
+        
+.github/workflows/ai-agent.yml:17:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       17 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ai-agent.yml:17:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       17 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ai-agent.yml:17:9: [Medium] actions/checkout without 'persist-credentials: false' at step "<unnamed>". Credentials are stored in .git/config. While no dangerous upload-artifact was found in this job, consider adding 'persist-credentials: false' to prevent credential exposure. See https://unit42.paloaltonetworks.com/github-repo-artifacts-leak-tokens/ [artipacked]
+       17 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/ai-agent.yml:19:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       19 👈|      - uses: anthropics/claude-code-action@beta
+               
+.github/workflows/ai-agent.yml:19:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       19 👈|      - uses: anthropics/claude-code-action@beta
+               
+.github/workflows/ai-agent.yml:19:9: action "anthropics/claude-code-action@beta" has untrusted input "github.event.comment.body", "github.event.pull_request.title" directly interpolated into "prompt" parameter. This enables prompt injection attacks (Clinejection). Pass untrusted values through environment variables instead of embedding them in the prompt. [ai-action-prompt-injection]
+       19 👈|      - uses: anthropics/claude-code-action@beta
+               
+.github/workflows/ai-agent.yml:37:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       37 👈|      - uses: actions/upload-artifact@v4
+               
+.github/workflows/ai-agent.yml:37:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       37 👈|      - uses: actions/upload-artifact@v4
+               

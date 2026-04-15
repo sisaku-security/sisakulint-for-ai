@@ -1,0 +1,40 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed to identify issues",
+      "passed": true,
+      "evidence": "initial-scan.txt contains sisakulint output identifying multiple findings: untrusted-checkout, dangerous-triggers-critical, permissions (write-all), commit-sha violations, missing-timeout-minutes, artipacked, and cache-poisoning findings across release.yml"
+    },
+    {
+      "text": "untrusted-checkout finding is identified and remediated",
+      "passed": true,
+      "evidence": "initial-scan.txt line 22-23 shows untrusted-checkout finding at release.yml:15 (github.event.pull_request.head.sha with pull_request_target). Remediated in release.yml by switching trigger to 'pull_request' (line 3) and removing the dangerous ref checkout. final-scan.txt line 55 shows 'untrusted-checkout found 0 errors'"
+    },
+    {
+      "text": "Secrets exposure is reduced to minimum required scope",
+      "passed": true,
+      "evidence": "initial-scan.txt line 7-8 shows 'write-all' permissions. Remediated release.yml uses least-privilege: 'contents: read' and 'packages: write' (lines 5-7). final-scan.txt line 36 shows 'permissions found 0 errors'"
+    },
+    {
+      "text": "Container images are pinned to specific versions or digests",
+      "passed": true,
+      "evidence": "initial-scan.txt lines 16-17, 28-29, 46-47 show commit-sha violations for actions/checkout@v4, actions/setup-node@v4, docker/build-push-action. Remediated release.yml pins all actions to full SHA commits: checkout@11bd71901bbe5b1630ceea73d27597364c9af683, setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af, build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25. final-scan.txt line 50 shows 'commit-sha found 0 errors'"
+    },
+    {
+      "text": "A dependabot.yml file is created or recommended for github-actions ecosystem",
+      "passed": true,
+      "evidence": "dependabot.yml exists with version: 2, package-ecosystem: github-actions, directory: /, schedule: weekly. initial-scan.txt line 1 shows the dependabot-github-actions finding. final-scan.txt line 51 shows 'dependabot-github-actions found 0 errors'"
+    },
+    {
+      "text": "Final sisakulint run confirms all findings resolved",
+      "passed": true,
+      "evidence": "final-scan.txt has substantial content (89 lines). Line 87 shows 'found 0 errors in 3000ms .github/workflows/release.yml' and line 88 shows 'Exit code: 0'. All rule categories report 0 errors including untrusted-checkout, commit-sha, permissions, missing-timeout-minutes, dangerous-triggers-critical, cache-poisoning, artipacked, and dependabot-github-actions"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

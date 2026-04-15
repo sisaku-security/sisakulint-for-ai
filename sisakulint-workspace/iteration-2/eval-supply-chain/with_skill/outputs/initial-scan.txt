@@ -1,0 +1,54 @@
+.github/workflows/release.yml:1:1: dependabot.yaml does not exist. Without Dependabot, major version updates (e.g., v3 -> v4) for GitHub Actions won't be automated. Create .github/dependabot.yaml with github-actions ecosystem. See https://sisaku-security.github.io/lint/docs/rules/dependabotgithubactionsrule/ [dependabot-github-actions]
+      1 👈|name: Release
+       
+.github/workflows/release.yml:4:3: dangerous trigger (critical): workflow uses privileged trigger(s) [pull_request_target] without any security mitigations. These triggers grant write access and secrets access to potentially untrusted code. Add at least one mitigation: restrict permissions (permissions: read-all or permissions: {}), use environment protection, add label conditions, or check github.actor. See https://sisaku-security.github.io/lint/docs/rules/dangeroustriggersrulecritical/ [dangerous-triggers-critical]
+      4 👈|  pull_request_target:
+        
+.github/workflows/release.yml:7:14: warning : The 'write-all' scope is too broad, covering all available scopes. Please specify 'write' or 'read' for each individual scope instead.Value: write-all plaese see https://github.com/suzuki-shunsuke/ghalint/blob/main/docs/policies/003.md [permissions]
+      7 👈|permissions: write-all
+                   
+.github/workflows/release.yml:10:3: timeout-minutes is not set for job build-and-publish; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       10 👈|  build-and-publish:
+         
+.github/workflows/release.yml:13:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       13 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/release.yml:13:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       13 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/release.yml:13:9: [Medium] actions/checkout without 'persist-credentials: false' at step "<unnamed>". Credentials are stored in .git/config. While no dangerous upload-artifact was found in this job, consider adding 'persist-credentials: false' to prevent credential exposure. See https://unit42.paloaltonetworks.com/github-repo-artifacts-leak-tokens/ [artipacked]
+       13 👈|      - uses: actions/checkout@v4
+               
+.github/workflows/release.yml:15:16: checking out untrusted code from pull request in workflow with privileged trigger 'pull_request_target' (line 4). This allows potentially malicious code from external contributors to execute with access to repository secrets. Use 'pull_request' trigger instead, or avoid checking out PR code when using 'pull_request_target'. See https://sisaku-security.github.io/lint/docs/rules/untrustedcheckout/ for more details [untrusted-checkout]
+       15 👈|          ref: ${{ github.event.pull_request.head.sha }}
+                      
+.github/workflows/release.yml:17:9: timeout-minutes is not set for step <unnamed>; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       17 👈|      - uses: actions/setup-node@v4
+               
+.github/workflows/release.yml:17:9: the action ref in 'uses' for step '<unnamed>' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       17 👈|      - uses: actions/setup-node@v4
+               
+.github/workflows/release.yml:21:9: timeout-minutes is not set for step Install dependencies; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       21 👈|      - name: Install dependencies
+               
+.github/workflows/release.yml:21:9: cache poisoning risk via build command: 'Install dependencies' runs untrusted code after checking out PR head (triggers: pull_request_target). Attacker can steal cache tokens [cache-poisoning-poisonable-step]
+       21 👈|      - name: Install dependencies
+               
+.github/workflows/release.yml:24:9: timeout-minutes is not set for step Build; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       24 👈|      - name: Build
+               
+.github/workflows/release.yml:24:9: cache poisoning risk via build command: 'Build' runs untrusted code after checking out PR head (triggers: pull_request_target). Attacker can steal cache tokens [cache-poisoning-poisonable-step]
+       24 👈|      - name: Build
+               
+.github/workflows/release.yml:27:9: timeout-minutes is not set for step Publish to registry; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       27 👈|      - name: Publish to registry
+               
+.github/workflows/release.yml:27:9: the action ref in 'uses' for step 'Publish to registry' should be a full length commit SHA for immutability and security. See https://sisaku-security.github.io/lint/docs/rules/commitsharule/ [commit-sha]
+       27 👈|      - name: Publish to registry
+               
+.github/workflows/release.yml:33:9: timeout-minutes is not set for step Deploy; see https://sisaku-security.github.io/lint/docs/rules/timeoutminutesrule/ for more details. [missing-timeout-minutes]
+       33 👈|      - name: Deploy
+               
+.github/workflows/release.yml:33:9: cache poisoning risk via local script execution: 'Deploy' runs untrusted code after checking out PR head (triggers: pull_request_target). Attacker can steal cache tokens [cache-poisoning-poisonable-step]
+       33 👈|      - name: Deploy
+               

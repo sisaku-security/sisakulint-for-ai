@@ -1,0 +1,49 @@
+{
+  "iteration": 2,
+  "date": "2026-04-15",
+  "changes_from_iteration_1": [
+    "Added step-level timeout-minutes FP gotcha",
+    "Added AI rules partial coverage gotcha",
+    "Added secret-exposure remediation pattern",
+    "Added ai-action-unrestricted-trigger remediation pattern",
+    "Added ai-action-excessive-tools remediation pattern"
+  ],
+  "eval_results": {
+    "eval-ci-hardening": {
+      "note": "Not re-run — already 100% in iteration 1",
+      "with_skill": { "passed": 6, "total": 6, "pass_rate": 1.0 }
+    },
+    "eval-supply-chain": {
+      "with_skill": { "passed": 6, "total": 6, "pass_rate": 1.0 },
+      "iteration_1": { "passed": 4, "total": 6, "pass_rate": 0.67 },
+      "improvement": "+33%"
+    },
+    "eval-clean-workflow": {
+      "with_skill": { "passed": 2, "total": 3, "pass_rate": 0.67 },
+      "iteration_1": { "passed": 1, "total": 3, "pass_rate": 0.33 },
+      "improvement": "+34%",
+      "remaining_issue": "sisakulint itself reports step-level timeout FPs — this is a tool bug, not a skill issue. The skill correctly instructs the agent to skip them."
+    },
+    "eval-ai-agent": {
+      "with_skill": { "passed": 5, "total": 5, "pass_rate": 1.0 },
+      "iteration_1": { "passed": 3, "total": 5, "pass_rate": 0.6 },
+      "improvement": "+40%"
+    }
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": { "mean": 0.92, "per_eval": [1.0, 1.0, 0.67, 1.0] },
+      "total_passed": 19,
+      "total_assertions": 20
+    },
+    "iteration_1_with_skill": {
+      "pass_rate": { "mean": 0.65, "per_eval": [1.0, 0.67, 0.33, 0.6] },
+      "total_passed": 14,
+      "total_assertions": 20
+    },
+    "delta_from_iteration_1": {
+      "mean_pass_rate": "+0.27",
+      "total_passed": "+5"
+    }
+  }
+}

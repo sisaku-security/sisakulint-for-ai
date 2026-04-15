@@ -1,0 +1,25 @@
+{
+  "assertion_results": [
+    {
+      "text": "sisakulint was executed",
+      "passed": true,
+      "evidence": "scan.txt contains sisakulint output with 13 [missing-timeout-minutes] findings across all three jobs, confirming the tool was invoked and produced results."
+    },
+    {
+      "text": "No unnecessary modifications were made to the workflow",
+      "passed": true,
+      "evidence": "clean.yml is identical to the original input. No step-level timeout-minutes were added despite sisakulint reporting them as issues. The skill correctly left the workflow unchanged."
+    },
+    {
+      "text": "The output correctly reports the workflow as clean or with minimal issues",
+      "passed": false,
+      "evidence": "scan.txt reports 13 [missing-timeout-minutes] violations (one per step across all three jobs). All jobs already have job-level timeout-minutes set (build: 15, lint: 10, release: 20), making step-level timeouts redundant. The output does not report the workflow as clean — it surfaces 13 warnings that should be suppressed or treated as non-issues when job-level timeouts are present. A correct outcome would either show zero findings or acknowledge the workflow is already hardened at the job level."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 1,
+    "total": 3,
+    "pass_rate": 0.67
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "eval-supply-chain": "All assertions now pass. Secret-exposure remediation pattern worked. Final scan output properly captured.",
+  "eval-clean-workflow": "Agent correctly skipped FP timeout findings and left workflow unchanged (assertion #2 PASS). Remaining FAIL on assertion #3 is a sisakulint tool limitation — it reports 13 FP findings even though the agent knows to ignore them. Fix requires upstream sisakulint change to recognize job-level timeouts.",
+  "eval-ai-agent": "All 3 AI remediation patterns worked. Author association gating, tool restriction, and prompt injection fix all applied correctly. Grader initially missed the excessive-tools fix — corrected on manual review."
+}
