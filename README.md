@@ -2,16 +2,6 @@
 
 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that scans and hardens GitHub Actions workflows using [sisakulint](https://github.com/sisaku-security/sisakulint).
 
-## What it does
-
-- Pin actions to full commit SHAs to prevent supply-chain attacks
-- Detect expression injection, credential leakage, and untrusted checkout patterns
-- Enforce step-level `timeout-minutes` as defense-in-depth
-- Flag AI agent security issues (prompt injection, unrestricted triggers, excessive tools)
-- Set up Dependabot for GitHub Actions updates
-
-52 rules across 7 categories. See [references/rules.md](references/rules.md) for the full list.
-
 ## Install
 
 ```bash
