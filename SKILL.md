@@ -30,7 +30,7 @@ For remote repos: `sisakulint -remote owner/repo` to scan, then clone locally fo
 - **artipacked is never auto-fixed**: The `-fix` flag does not add `persist-credentials: false`. Always check `actions/checkout` steps manually after auto-fix.
 - **`go install` requires Go 1.23+**: Older Go versions fail silently or produce incompatible binaries.
 - **Monorepo path filters**: When workflows use `paths:` filters, `sisakulint -remote` may miss files outside the default branch tree. Clone and run locally for full coverage.
-- **Step-level timeout-minutes false positives**: `sisakulint` may flag `missing-timeout-minutes` on individual steps even when the job already has `timeout-minutes` set. Job-level timeouts cover all steps — skip step-level timeout findings when a job-level timeout is present.
+- **Step-level timeout-minutes false positives**: `sisakulint` may flag `missing-timeout-minutes` on individual steps even when the job already has `timeout-minutes` set. Job-level timeouts cover all steps, so these are false positives. Do not apply step-level timeout fixes when a job-level timeout is already present — instead, report it as a known sisakulint issue (see [sisakulint#428](https://github.com/sisaku-security/sisakulint/issues/428)).
 - **AI rules partial coverage**: `sisakulint` reliably detects `ai-action-prompt-injection` but may not fire `ai-action-unrestricted-trigger` or `ai-action-excessive-tools` in all cases. After auto-fix, manually review AI agent workflows for these two patterns (see manual remediation below).
 
 ## Manual remediation patterns
