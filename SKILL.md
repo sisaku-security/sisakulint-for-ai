@@ -1,11 +1,8 @@
 ---
 name: sisakulint
 description: >
-  GitHub Actions ワークフローのセキュリティ静的解析・自動修正ツール sisakulint を使用したワークフロー硬化スキル。
-  52のセキュリティルールでサプライチェーン攻撃、コードインジェクション、認証情報漏洩、パイプラインポイズニング等を検出・修正する。
-  Trigger: GitHub Actions セキュリティ, ワークフロー hardening, sisakulint, CI/CDセキュリティ,
-  サプライチェーンセキュリティ, actions pinning, commit SHA, workflow lint,
-  「ワークフローをセキュアに」「CIを安全に」「actionsを固定」
+  sisakulint による GitHub Actions ワークフローのセキュリティ硬化。
+  Trigger: sisakulint, ワークフロー hardening, CI/CDセキュリティ, actions pinning, workflow lint
 ---
 
 # sisakulint
