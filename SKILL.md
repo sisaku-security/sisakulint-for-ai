@@ -1,8 +1,13 @@
 ---
 name: sisakulint
 description: >
-  Harden GitHub Actions workflows with sisakulint.
-  Trigger: sisakulint, workflow hardening, CI/CD security, actions pinning, workflow lint
+  Scan and harden GitHub Actions workflows — pin actions to full commit SHAs,
+  detect expression injection vulnerabilities, enforce credential hygiene,
+  and set up Dependabot for actions updates. Use this skill when the user has
+  GitHub Actions workflow files and wants to improve their CI/CD security posture,
+  even if they don't explicitly mention "linting" or "hardening." Also use when
+  reviewing .github/workflows/*.yml for supply-chain risks or preparing workflows
+  for security compliance.
 ---
 
 # sisakulint
