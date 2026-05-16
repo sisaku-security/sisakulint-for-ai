@@ -18,7 +18,7 @@ Static security linter for GitHub Actions workflows with auto-fix support.
 
 1. Run `sisakulint`. If not found, install with `go install github.com/sisaku-security/sisakulint/cmd/sisakulint@v0.2.9`
 2. Review findings, then apply auto-fix: `sisakulint -fix on`
-3. Apply manual remediations for rules that auto-fix cannot handle (see below)
+3. Apply manual remediations for rules that auto-fix cannot handle — open the per-rule reference linked from the table below.
 4. Validate: re-run `sisakulint` and confirm zero findings
 5. If findings remain, fix and re-run until all rules pass
 
@@ -32,109 +32,95 @@ For remote repos: `sisakulint -remote owner/repo` to scan, then clone locally fo
 - **Monorepo path filters**: When workflows use `paths:` filters, `sisakulint -remote` may miss files outside the default branch tree. Clone and run locally for full coverage.
 - **`-remote` trust boundary**: `sisakulint -remote` only performs static analysis and outputs rule IDs, line numbers, and messages — it never imports or executes external YAML. Scanning private repos requires `GITHUB_TOKEN`; keep the token scope minimal.
 - **Step-level timeout-minutes is intentional**: `sisakulint` flags `missing-timeout-minutes` on individual steps even when the job has `timeout-minutes` set. This is **not a false positive** — a single step can consume the entire job timeout, blocking subsequent steps. Step-level timeouts are a defense-in-depth measure. Apply them.
-- **AI rules partial coverage**: `sisakulint` reliably detects `ai-action-prompt-injection` but may not fire `ai-action-unrestricted-trigger` or `ai-action-excessive-tools` in all cases. After auto-fix, manually review AI agent workflows for these two patterns (see manual remediation below).
+- **AI rules partial coverage**: `sisakulint` reliably detects `ai-action-prompt-injection` but may not fire `ai-action-unrestricted-trigger` or `ai-action-excessive-tools` in all cases. After auto-fix, manually review AI agent workflows for these two patterns.
 
-## Manual remediation patterns
+## Rules
 
-### artipacked — Credential persistence
+The `Reference` column links to per-rule remediation guides under `references/`.
 
-```yaml
-- uses: actions/checkout@<sha>
-  with:
-    persist-credentials: false
-```
+### Code Injection & Expression Safety (9)
 
-### code-injection-critical — Expression interpolation
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| code-injection-critical | Critical | Code injection in privileged triggers | [code-injection-critical.md](references/code-injection-critical.md) |
+| code-injection-medium | Medium | Code injection in normal triggers | [code-injection-critical.md](references/code-injection-critical.md) |
+| envvar-injection-critical | Critical | Unsafe env var usage in high-risk triggers | |
+| envvar-injection-medium | Medium | Unsafe env var usage in standard triggers | |
+| envpath-injection-critical | Critical | PATH manipulation in privileged contexts | |
+| envpath-injection-medium | Medium | PATH manipulation in regular contexts | |
+| argument-injection | High | Command-line argument injection | |
+| output-clobbering | High | Output clobbering via $GITHUB_OUTPUT | |
+| unsound-contains | Medium | Unsafe contains() usage in conditions | |
 
-Replace direct expression usage in `run:` with an intermediate env var:
+### Supply Chain & Dependency Security (7)
 
-```yaml
-# Before (vulnerable — expression injected directly into shell)
-- run: echo "Hello ${{ github.event.issue.title }}"
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| commit-sha | High | Action refs not pinned to full commit SHA | |
+| known-vulnerable-actions | Critical | Actions with known vulnerabilities | |
+| archived-uses | Medium | Archived/deprecated actions | |
+| impostor-commit | Critical | Impostor commit attack patterns | |
+| ref-confusion | High | Branch reference manipulation | |
+| unpinned-images | High | Container images without version pins | |
+| action-list | Medium | Action allowlist/blocklist enforcement | |
 
-# After (safe — expression bound to env var, quoted in shell)
-- run: echo "Hello $TITLE"
-  env:
-    TITLE: ${{ github.event.issue.title }}
-```
+### Credential & Secret Protection (7)
 
-### dependabot-github-actions — Missing dependabot config
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| credentials | Critical | Hardcoded credential patterns (Rego) | |
+| secret-exposure | High | Excessive secrets exposure | [secret-exposure.md](references/secret-exposure.md) |
+| unmasked-secret-exposure | High | Unmasked secrets in workflow logs | [secret-in-log.md](references/secret-in-log.md) |
+| secret-exfiltration | High | Network-based secret extraction | [secret-exfiltration.md](references/secret-exfiltration.md) |
+| secrets-in-artifacts | High | Sensitive data in uploaded artifacts | |
+| secrets-inherit | Medium | Excessive secrets inheritance | |
+| artipacked | Medium | Credential persistence vulnerability | [artipacked.md](references/artipacked.md) |
 
-Create `.github/dependabot.yml`:
+### Pipeline Poisoning & Artifact Integrity (8)
 
-```yaml
-version: 2
-updates:
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-```
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| untrusted-checkout | Critical | Checkout of untrusted PR code | [untrusted-checkout.md](references/untrusted-checkout.md) |
+| untrusted-checkout-toctou-critical | Critical | TOCTOU race conditions in checkout (Critical) | [untrusted-checkout.md](references/untrusted-checkout.md) |
+| untrusted-checkout-toctou-high | High | TOCTOU issues in checkout (High) | [untrusted-checkout.md](references/untrusted-checkout.md) |
+| artifact-poisoning-critical | Critical | Malicious artifact injection in critical flows | [artifact-poisoning-critical.md](references/artifact-poisoning-critical.md) |
+| artifact-poisoning-medium | Medium | Artifact tampering in standard flows | [artifact-poisoning-critical.md](references/artifact-poisoning-critical.md) |
+| cache-poisoning | High | Cache corruption vulnerabilities | [cache-poisoning.md](references/cache-poisoning.md) |
+| cache-poisoning-poisonable-step | High | Unsafe steps after vulnerable checkout | [cache-poisoning.md](references/cache-poisoning.md) |
+| reusable-workflow-taint | High | Untrusted inputs in reusable workflows | |
 
-### secret-exposure — Excessive secrets in environment
+### Triggers & Access Control (7)
 
-Remove secrets that are not required by the step. Secrets like `DATABASE_URL` or payment keys should never appear in CI deploy steps — they belong in a runtime secrets manager.
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| dangerous-triggers-critical | Critical | Privileged triggers without mitigations | |
+| dangerous-triggers-medium | Medium | Privileged triggers with partial mitigations | |
+| permissions | High | Permission scope and value validation | |
+| bot-conditions | Medium | Bot actor conditions validation | [dependabot-github-actions.md](references/dependabot-github-actions.md) |
+| improper-access-control | High | Label-based approval bypass | |
+| self-hosted-runners | Medium | Self-hosted runner security | |
+| request-forgery | High | SSRF vulnerabilities | |
 
-```yaml
-# Before (6 secrets exposed to deploy script)
-- run: ./scripts/deploy.sh
-  env:
-    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+### AI Agent Security (3)
 
-# After (only deploy-relevant secrets)
-- run: ./scripts/deploy.sh
-  env:
-    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-```
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| ai-action-unrestricted-trigger | Critical | AI actions allowing any user to trigger execution | [ai-action-unrestricted-trigger.md](references/ai-action-unrestricted-trigger.md) |
+| ai-action-excessive-tools | High | Dangerous tool grants to AI agents in untrusted triggers | [ai-action-excessive-tools.md](references/ai-action-excessive-tools.md) |
+| ai-action-prompt-injection | High | Untrusted input interpolated into AI agent prompts | |
 
-### untrusted-checkout — PR code checkout
+### Workflow Quality & Best Practices (11)
 
-For `pull_request_target` workflows, never checkout `github.event.pull_request.head.sha` in a step that runs untrusted code. Use `pull_request` trigger instead, or isolate the checkout into a separate job with minimal permissions.
-
-### ai-action-unrestricted-trigger — Missing actor allowlist
-
-AI agent workflows triggered by `issue_comment` or similar events must gate on `github.event.comment.author_association` to prevent any user from triggering expensive or privileged AI execution.
-
-```yaml
-# Add actor allowlist before AI action runs
-if: >-
-  contains(github.event.comment.body, '/ai-review') &&
-  contains(fromJSON('["MEMBER","OWNER","COLLABORATOR"]'),
-           github.event.comment.author_association)
-```
-
-### ai-action-excessive-tools — Dangerous tool grants
-
-AI agents triggered by untrusted input should not have write access to the codebase. Restrict `allowed_tools` to read-only or review-only operations.
-
-```yaml
-# Before (dangerous — full write access)
-allowed_tools: |
-  Bash
-  Edit
-  Write
-  mcp__github__push_files
-  mcp__github__delete_file
-
-# After (safe — review only, creates PR for human approval)
-allowed_tools: |
-  Read
-  Glob
-  Grep
-  mcp__github__create_pull_request
-```
-
-## Per-rule deep dives
-
-For rules whose remediation is more than a one-paragraph snippet, see:
-
-- [references/cache-poisoning.md](references/cache-poisoning.md) — drop `cache: <pm>`, scope keys by trust level, or split into a low-privilege workflow.
-- [references/secret-in-log.md](references/secret-in-log.md) — `::add-mask::` ordering, here-string alternatives to `echo "$X" | tool`.
-- [references/secret-exfiltration.md](references/secret-exfiltration.md) — workflow-scoped `-ignore` allowlist as a documented exception until upstream `allowed-hosts` config lands (issue #473).
-- [references/artifact-poisoning-critical.md](references/artifact-poisoning-critical.md) — extract artifacts to `${{ runner.temp }}/<subdir>`, never the checkout.
-
-## Full rules reference
-
-See [references/rules.md](references/rules.md) for the complete list of 52 rules across 7 categories.
+| ID | Severity | Detection | Reference |
+|----|----------|-----------|-----------|
+| id | Medium | Job and environment variable ID collisions | |
+| timeout-minutes | Medium | Missing timeout-minutes | |
+| workflow-call | Medium | Reusable workflow call validation | |
+| conditional | Medium | Conditional expression validation | |
+| deprecated-commands | Low | Deprecated workflow commands | |
+| environment-variable | Low | Environment variable name validation | |
+| job-needs | Medium | Job dependency validation | |
+| cache-bloat | Low | Cache size efficiency | |
+| obfuscation | Medium | Obfuscated code in workflows | |
+| expression | Medium | GitHub Actions expression syntax validation | |
+| dependabot-github-actions | Medium | Dependabot config for Actions ecosystem | [dependabot-github-actions.md](references/dependabot-github-actions.md) |
