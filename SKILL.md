@@ -126,6 +126,15 @@ allowed_tools: |
   mcp__github__create_pull_request
 ```
 
+## Per-rule deep dives
+
+For rules whose remediation is more than a one-paragraph snippet, see:
+
+- [references/cache-poisoning.md](references/cache-poisoning.md) — drop `cache: <pm>`, scope keys by trust level, or split into a low-privilege workflow.
+- [references/secret-in-log.md](references/secret-in-log.md) — `::add-mask::` ordering, here-string alternatives to `echo "$X" | tool`.
+- [references/secret-exfiltration.md](references/secret-exfiltration.md) — workflow-scoped `-ignore` allowlist as a documented exception until upstream `allowed-hosts` config lands (issue #473).
+- [references/artifact-poisoning-critical.md](references/artifact-poisoning-critical.md) — extract artifacts to `${{ runner.temp }}/<subdir>`, never the checkout.
+
 ## Full rules reference
 
 See [references/rules.md](references/rules.md) for the complete list of 52 rules across 7 categories.
